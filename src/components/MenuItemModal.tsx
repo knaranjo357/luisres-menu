@@ -37,7 +37,7 @@ const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, isOpen, onClose }) 
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -62,7 +62,7 @@ const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, isOpen, onClose }) 
 
                   <div className="aspect-video w-full overflow-hidden rounded-lg mb-4">
                     <img
-                      src={item.url_imagen || '/images/background.jpeg'}
+                      src={item.url_imagen || 'https://alliasoft.s3.us-east-2.amazonaws.com/restaurante-luisres/background.jpeg'}
                       alt={item.nombre}
                       className="w-full h-full object-cover"
                     />
@@ -74,7 +74,7 @@ const MenuItemModal: React.FC<MenuItemModalProps> = ({ item, isOpen, onClose }) 
 
                   <p className="text-wood-medium mb-4">{item.descripcion}</p>
 
-                  {item.para_llevar && item.precio_adicional_llevar && (
+                  {item.precio_adicional_llevar && (
                     <div className="mb-4 bg-amber-50 p-3 rounded-lg">
                       <p className="text-amber-700 font-medium">
                         Recargo para llevar: +{formatPrice(item.precio_adicional_llevar)}

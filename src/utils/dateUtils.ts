@@ -4,19 +4,20 @@ import { CartItem, CustomerInfo } from '../types';
 
 export const cities = [
   {
+    name: 'Floridablanca',
+    neighborhoods: [
+      { name: 'Caldas', price: 4000 },
+      { name: 'Cañaveral', price: 4000 },
+      { name: 'Lagos', price: 4000 },
+      { name: 'Valencia', price: 5000 }
+    ]
+  },
+  {
     name: 'Bucaramanga',
     neighborhoods: [
       { name: 'Cabecera', price: 5000 },
       { name: 'Sotomayor', price: 5000 },
       { name: 'Real de Minas', price: 6000 }
-    ]
-  },
-  {
-    name: 'Floridablanca',
-    neighborhoods: [
-      { name: 'Cañaveral', price: 4000 },
-      { name: 'Lagos', price: 4000 },
-      { name: 'Valencia', price: 5000 }
     ]
   },
   {
@@ -38,18 +39,18 @@ export const cities = [
 export const restaurantConfig = {
   mondayClosed: true,
   info: {
-    whatsapp: '573001234567',
-    phone: '6076001234',
-    address: 'Calle 123 #45-67, Bucaramanga'
+    whatsapp: '573166193963',
+    phone: '6363610',
+    address: 'Cra 37 #109-24, Floridablanca - Barrio Caldas'
   },
   schedule: {
     lunch: {
-      start: '12:00',
-      end: '15:00'
+      start: '11:00',
+      end: '14:00'
     },
     dinner: {
       start: '18:00',
-      end: '22:00'
+      end: '21:00'
     }
   }
 };
@@ -90,9 +91,8 @@ export const formatWhatsAppMessage = (
 ): string => {
   const itemsList = items.map(item => {
     const price = calculateItemPrice(item);
-    const takeawayNote = item.isForTakeaway ? ' (Para llevar)' : '';
     const notes = item.notes ? `\nNotas: ${item.notes}` : '';
-    return `• ${item.quantity}x ${item.nombre}${takeawayNote} - ${formatPrice(price)}${notes}`;
+    return `• ${item.quantity}x ${item.nombre} - ${formatPrice(price)}${notes}`;
   }).join('\n\n');
 
   const subtotal = calculateTotalPrice(items);
