@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { MenuItem } from '../types';
 
-const API_URL = 'https://n8n.alliasoft.com/webhook/luis-res/chat';
+const API_URL = 'https://n8n.alliasoft.com/webhook/luis-res/menu';
 
 // Mock data to use while API is unavailable
 const mockMenuItems: MenuItem[] = [
