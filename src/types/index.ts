@@ -31,6 +31,7 @@ export interface CustomerInfo {
   phone: string;
   address: string;
   city: string;
+  neighborhood?: string;
   paymentMethod: 'efectivo' | 'transferencia';
   deliveryType: 'delivery' | 'pickup';
   addressConfirmed?: boolean;
@@ -50,4 +51,12 @@ export interface RestaurantInfo {
       end: string;
     };
   };
+}
+
+export interface City {
+  name: string;
+  neighborhoods: {
+    name: string;
+    price: number;
+  }[];
 }

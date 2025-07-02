@@ -3,55 +3,68 @@ import { CartItem, MenuItem } from '../types';
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (item: MenuItem, quantity?: number, notes?: string) => void;
+  addToCart: (item: MenuItem, quantity: number, notes?: string) => void;
   removeFromCart: (itemId: string) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   updateNotes: (itemId: string, notes: string) => void;
   clearCart: () => void;
-  total: number;
+  getTotalItems: () => number;
+  getTotalPrice: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+interface CartProviderProps {
+  children: ReactNode;
+}
+
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
 
-  const addToCart = (item: MenuItem, quantity = 1, notes = '') => {
-    setItems(currentItems => {
-      const existingItem = currentItems.find(i => i.id === item.id);
-      
-      if (existingItem) {
-        return currentItems.map(i =>
-          i.id === item.id
-            ? { ...i, quantity: i.quantity + quantity, notes }
-            : i
-        );
+  const addToCart = (item: MenuItem, quantity: number, notes?: string) => {
+    setItems(prevItems => {
+      const existingItemIndex = prevItems.findIndex(cartItem => 
+        cartItem.id === item.id && cartItem.notes === notes
+      );
+
+      if (existingItemIndex > -1) {
+        // Update existing item quantity
+        const updatedItems = [...prevItems];
+        updatedItems[existingItemIndex].quantity += quantity;
+        return updatedItems;
+      } else {
+        // Add new item
+        const newCartItem: CartItem = {
+          ...item,
+          quantity,
+          notes: notes || '',
+          isForTakeaway: true // Default to takeaway
+        };
+        return [...prevItems, newCartItem];
       }
-      
-      return [...currentItems, { ...item, quantity, notes }];
     });
   };
 
   const removeFromCart = (itemId: string) => {
-    setItems(items => items.filter(item => item.id !== itemId));
+    setItems(prevItems => prevItems.filter(item => item.id !== itemId));
   };
 
   const updateQuantity = (itemId: string, quantity: number) => {
-    if (quantity < 1) {
+    if (quantity <= 0) {
       removeFromCart(itemId);
       return;
     }
-    
-    setItems(items =>
-      items.map(item =>
+
+    setItems(prevItems =>
+      prevItems.map(item =>
         item.id === itemId ? { ...item, quantity } : item
       )
     );
   };
 
   const updateNotes = (itemId: string, notes: string) => {
-    setItems(items =>
-      items.map(item =>
+    setItems(prevItems =>
+      prevItems.map(item =>
         item.id === itemId ? { ...item, notes } : item
       )
     );
@@ -61,24 +74,39 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setItems([]);
   };
 
-  const total = items.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
+  const getTotalItems = () => {
+    return items.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  const getTotalPrice = () => {
+    return items.reduce((total, item) => {
+      let itemPrice = item.valor;
+      if (item.isForTakeaway && item.precio_adicional_llevar) {
+        itemPrice += item.precio_adicional_llevar;
+      }
+      return total + (itemPrice * item.quantity);
+    }, 0);
+  };
+
+  const value: CartContextType = {
+    items,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    updateNotes,
+    clearCart,
+    getTotalItems,
+    getTotalPrice
+  };
 
   return (
-    <CartContext.Provider value={{
-      items,
-      addToCart,
-      removeFromCart,
-      updateQuantity,
-      updateNotes,
-      clearCart,
-      total
-    }}>
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );
 };
 
-export const useCart = () => {
+export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (context === undefined) {
     throw new Error('useCart must be used within a CartProvider');

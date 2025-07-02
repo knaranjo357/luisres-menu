@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { ShoppingBag, X, ArrowLeft } from 'lucide-react';
+import { ShoppingBag, X, ArrowLeft, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { formatWhatsAppMessage, restaurantConfig } from '../utils/dateUtils';
 import { CustomerInfo } from '../types';
 import CartContent from './CartContent';
-import CheckoutForm from './CheckoutForm';
+import SimplifiedCheckoutWizard from './SimplifiedCheckoutWizard';
 
 const Cart: React.FC = () => {
   const { items } = useCart();
@@ -31,6 +31,19 @@ const Cart: React.FC = () => {
     setStep('cart');
   };
 
+  const resetCart = () => {
+    setIsOpen(false);
+    setStep('cart');
+    setCustomerInfo({
+      name: '',
+      phone: '',
+      address: '',
+      city: '',
+      paymentMethod: 'efectivo',
+      deliveryType: 'delivery'
+    });
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -38,11 +51,10 @@ const Cart: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 z-50 overflow-hidden"
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 overflow-hidden"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
-              setIsOpen(false);
-              setStep('cart');
+              resetCart();
             }
           }}
         >
@@ -51,68 +63,124 @@ const Cart: React.FC = () => {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="absolute inset-0 bg-cream flex flex-col h-full"
+            className="absolute inset-0 bg-gradient-to-br from-cream to-cream-light flex flex-col h-full"
           >
-            <div className="p-4 border-b sticky top-0 bg-cream z-10">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  {step === 'checkout' && (
-                    <button
-                      onClick={() => setStep('cart')}
-                      className="p-2 hover:bg-wood-light/10 rounded-full transition-colors"
-                    >
-                      <ArrowLeft size={24} className="text-wood-dark" />
-                    </button>
-                  )}
-                  <h3 className="text-xl font-semibold text-wood-dark font-title">
-                    {step === 'cart' ? 'Tu Pedido' : 'Finalizar Pedido'}
-                  </h3>
+            {/* Header simplificado */}
+            <div className="bg-white backdrop-blur-xl border-b-2 border-gold/30 sticky top-0 z-10 shadow-luxury">
+              <div className="p-6">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-4">
+                    {step === 'checkout' && (
+                      <motion.button
+                        whileHover={{ scale: 1.1, x: -2 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setStep('cart')}
+                        className="p-3 hover:bg-gold/10 rounded-2xl transition-all border-2 border-transparent hover:border-gold/30"
+                      >
+                        <ArrowLeft size={24} className="text-wood-dark" />
+                      </motion.button>
+                    )}
+                    <div>
+                      <h3 className="text-3xl font-bold text-wood-dark font-title flex items-center gap-3">
+                        {step === 'cart' ? (
+                          <>
+                            <div className="p-2 bg-gold/20 rounded-xl">
+                              <ShoppingBag size={28} className="text-gold" />
+                            </div>
+                            Tu Pedido
+                          </>
+                        ) : (
+                          <>
+                            <div className="p-2 bg-gold/20 rounded-xl">
+                              <Sparkles size={28} className="text-gold" />
+                            </div>
+                            Datos de Entrega
+                          </>
+                        )}
+                      </h3>
+                      {step === 'cart' && (
+                        <p className="text-wood-medium text-lg font-medium">
+                          {items.length} {items.length === 1 ? 'producto seleccionado' : 'productos seleccionados'}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.1, rotate: 90 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={resetCart}
+                    className="text-wood-dark/60 hover:text-wood-dark hover:bg-gold/10 transition-all p-3 rounded-2xl border-2 border-transparent hover:border-gold/30"
+                  >
+                    <X size={28} />
+                  </motion.button>
                 </div>
-                <button
-                  onClick={() => {
-                    setIsOpen(false);
-                    setStep('cart');
-                  }}
-                  className="text-wood-dark/60 hover:text-wood-dark transition-colors p-2"
-                >
-                  <X size={24} />
-                </button>
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto">
-              {step === 'cart' && (
-                <CartContent onCheckout={() => setStep('checkout')} />
-              )}
-              {step === 'checkout' && (
-                <CheckoutForm
-                  customerInfo={customerInfo}
-                  setCustomerInfo={setCustomerInfo}
-                  onBack={() => setStep('cart')}
-                  onSubmit={handleWhatsAppOrder}
-                />
-              )}
+            {/* Content */}
+            <div className="flex-1 overflow-hidden">
+              <AnimatePresence mode="wait">
+                {step === 'cart' && (
+                  <motion.div
+                    key="cart"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="h-full"
+                  >
+                    <CartContent onCheckout={() => setStep('checkout')} />
+                  </motion.div>
+                )}
+                {step === 'checkout' && (
+                  <motion.div
+                    key="checkout"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.3 }}
+                    className="h-full"
+                  >
+                    <SimplifiedCheckoutWizard
+                      customerInfo={customerInfo}
+                      setCustomerInfo={setCustomerInfo}
+                      onBack={() => setStep('cart')}
+                      onSubmit={handleWhatsAppOrder}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         </motion.div>
       )}
 
+      {/* Enhanced Floating Cart Button */}
       <motion.button
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.1, y: -5 }}
+        whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-4 right-4 z-40 ${
+        className={`fixed bottom-6 right-6 z-40 ${
           items.length > 0
-            ? 'bg-wood-dark text-cream hover:bg-wood-medium'
+            ? 'bg-gradient-to-r from-gold to-gold/90 hover:from-gold/90 hover:to-gold text-white shadow-luxury hover:shadow-glow-strong'
             : 'bg-wood-dark/50 text-cream/50 cursor-not-allowed'
-        } p-3 rounded-full shadow-lg transition-all`}
+        } p-5 rounded-3xl transition-all duration-300 border-2 ${
+          items.length > 0 ? 'border-gold/30' : 'border-wood-dark/30'
+        }`}
         disabled={items.length === 0}
       >
-        <ShoppingBag size={24} />
-        {items.length > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-            {items.length}
-          </span>
-        )}
+        <div className="relative">
+          <ShoppingBag size={32} />
+          {items.length > 0 && (
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute -top-3 -right-3 bg-red-500 text-white text-sm w-7 h-7 rounded-full flex items-center justify-center font-bold shadow-lg border-2 border-white"
+            >
+              {items.length}
+            </motion.span>
+          )}
+        </div>
       </motion.button>
     </AnimatePresence>
   );
