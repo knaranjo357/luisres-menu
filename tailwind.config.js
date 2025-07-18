@@ -3,6 +3,9 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      screens: {
+        'xs': '475px',
+      },
       colors: {
         // Paleta de colores premium para el restaurante
         gold: {
@@ -40,11 +43,11 @@ export default {
         accent: ['Crimson Text', 'serif'],
       },
       boxShadow: {
-        luxury: '0 10px 40px rgba(0, 0, 0, 0.1)',
-        'luxury-lg': '0 20px 60px rgba(0, 0, 0, 0.15)',
-        'luxury-xl': '0 30px 80px rgba(0, 0, 0, 0.2)',
-        glow: '0 0 20px rgba(212, 175, 55, 0.3)',
-        'glow-strong': '0 0 30px rgba(212, 175, 55, 0.5)',
+        luxury: '0 8px 32px rgba(0, 0, 0, 0.08)',
+        'luxury-lg': '0 16px 48px rgba(0, 0, 0, 0.12)',
+        'luxury-xl': '0 24px 64px rgba(0, 0, 0, 0.16)',
+        glow: '0 0 16px rgba(212, 175, 55, 0.25)',
+        'glow-strong': '0 0 24px rgba(212, 175, 55, 0.4)',
       },
       backgroundImage: {
         'premium-gradient': 'linear-gradient(135deg, #faf6f2 0%, #f5f5dc 100%)',

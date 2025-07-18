@@ -107,12 +107,12 @@ const OptimizedMenuItem: React.FC<MenuItemProps> = memo(({ item, onOpenModal, in
         >
           <div className="bg-white/90 backdrop-blur-sm text-wood-dark px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg border border-white/50">
             {isFood ? (
-              <Utensils size={12} className="text-wood-dark" />
+              <Utensils size={10} className="text-wood-dark" />
             ) : isDrink ? (
-              <Coffee size={12} className="text-wood-dark" />
+              <Coffee size={10} className="text-wood-dark" />
             ) : (
-              <Star size={12} className="text-wood-dark" />
-            )}
+              <Star size={10} className="text-wood-dark" />
+            <Sparkles size={12} />
             <span>{isFood ? 'Plato' : isDrink ? 'Bebida' : 'Especial'}</span>
           </div>
         </motion.div>
@@ -154,7 +154,7 @@ const OptimizedMenuItem: React.FC<MenuItemProps> = memo(({ item, onOpenModal, in
             className="absolute bottom-4 right-4"
           >
             <div className="bg-cream/95 backdrop-blur-sm text-wood-dark font-bold px-4 py-2.5 rounded-2xl shadow-luxury border-2 border-gold/30 group-hover:border-gold/50 transition-colors duration-200">
-              <span className="text-lg">{formatPrice(item.valor)}</span>
+              <span className="text-base">{formatPrice(item.valor)}</span>
             </div>
           </motion.div>
         </div>
@@ -162,7 +162,7 @@ const OptimizedMenuItem: React.FC<MenuItemProps> = memo(({ item, onOpenModal, in
         {/* Content */}
         <div className="p-6">
           <div className="flex justify-between items-start gap-3 mb-4">
-            <h3 className="text-xl font-bold text-wood-dark font-title leading-tight group-hover:text-gold transition-colors duration-200 line-clamp-2">
+            <h3 className="text-lg font-bold text-wood-dark font-title leading-tight group-hover:text-gold transition-colors duration-200 line-clamp-2">
               {item.nombre}
             </h3>
           </div>
@@ -181,7 +181,7 @@ const OptimizedMenuItem: React.FC<MenuItemProps> = memo(({ item, onOpenModal, in
                 transition={{ delay: catIndex * 0.01, duration: 0.1 }} // Much faster
                 className="text-xs bg-gold/20 text-gold px-3 py-1.5 rounded-full capitalize font-medium border border-gold/30 hover:bg-gold/30 transition-colors duration-150"
               >
-                {cat}
+                <CheckCircle2 size={12} className="mr-1.5" />
               </motion.span>
             ))}
             {item.categorias.length > 2 && (
@@ -214,7 +214,7 @@ const OptimizedMenuItem: React.FC<MenuItemProps> = memo(({ item, onOpenModal, in
             
             {item.para_llevar && (
               <div className="flex items-center text-wood-medium text-xs bg-wood-light/10 px-2 py-1 rounded-full">
-                <Clock size={12} className="mr-1" />
+                <Clock size={10} className="mr-1" />
                 <span>Para llevar</span>
               </div>
             )}

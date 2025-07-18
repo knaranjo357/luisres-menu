@@ -6,6 +6,7 @@
 @layer base {
   * {
     @apply border-0;
+    font-size: 0.9em; /* Reducir tamaño general de fuente */
   }
   
   body {
@@ -13,10 +14,17 @@
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: 14px; /* Tamaño base más pequeño */
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-title;
+  }
+  
+  /* Reducir tamaños de iconos globalmente */
+  svg {
+    width: 0.9em;
+    height: 0.9em;
   }
 }
 
