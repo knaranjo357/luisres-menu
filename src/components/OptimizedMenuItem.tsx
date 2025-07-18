@@ -112,6 +112,7 @@ const OptimizedMenuItem: React.FC<MenuItemProps> = memo(({ item, onOpenModal, in
               <Coffee size={10} className="text-wood-dark" />
             ) : (
               <Star size={10} className="text-wood-dark" />
+            )}
             <Sparkles size={12} />
             <span>{isFood ? 'Plato' : isDrink ? 'Bebida' : 'Especial'}</span>
           </div>
